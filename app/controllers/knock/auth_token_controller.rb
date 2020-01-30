@@ -1,14 +1,31 @@
-require_dependency "knock/application_controller"
+require_dependency 'knock/application_controller'
 
 module Knock
   class AuthTokenController < ApplicationController
-    before_action :authenticate
+    before_action :authenticate, only: [:create]
 
     def create
-      render json: auth_token, status: :created
+      unless entity.respond_to? :generate_refresh_token!
+        render json: auth_token, status: :created
+      end
+
+      refresh_token = entity.generate_refresh_token!
+      render json: { access_token: auth_token.token, refresh_token: refresh_token }, status: :created
     end
 
-  private
+    def refresh
+      unless entity_class.respond_to? :from_refresh_token
+        raise Knock.not_found_exception_class
+      end
+
+      refresh_entity = entity_class.from_refresh_token params['refresh_token']
+      raise Knock.not_found_exception_class unless refresh_entity
+
+      @entity = refresh_entity
+      render json: { access_token: auth_token.token }, status: :created
+    end
+
+    private
     def authenticate
       unless entity.present? && entity.authenticate(auth_params[:password])
         raise Knock.not_found_exception_class
