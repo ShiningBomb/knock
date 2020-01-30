@@ -1,6 +1,7 @@
-# Your User object have to implement generate_refresh_token and self.from_refresh_token
+# Finally knock with refresh token!
+Your User object have to implement generate_refresh_token and self.from_refresh_token
 Example:
-
+```ruby
 class RefreshToken
   belongs_to :user
   attr_accessor :uncrypted_token
@@ -34,7 +35,7 @@ class User
     token.user
   end
 end
-
+```
 # knock
 
 [![Gem Version](https://badge.fury.io/rb/knock.svg)](http://badge.fury.io/rb/knock)
