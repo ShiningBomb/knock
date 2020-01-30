@@ -15,7 +15,6 @@ class RefreshToken
   def generate_token
     self.uncrypted_token = SecureRandom.hex(50)
     self.token = Digest::SHA256.hexdigest self.uncrypted_token #ALWAYS STORE HASHED VERSION!!
-    self.expire_at = 1.years.from_now
   end
 end
 
