@@ -57,6 +57,11 @@ post your refresh token to the refresh controller:
   "refresh_token": "JKV1QiLCJh.."
 }
 
+FAQ: 
+When it will expire? Never. If you like to expire, you can add property expiry in the refresh token, and exclude expired refresh token from the query.
+
+How to invalidate refresh token that user holds? Remove the refresh token from your user, or refresh! the refresh token.
+
 # knock
 
 [![Gem Version](https://badge.fury.io/rb/knock.svg)](http://badge.fury.io/rb/knock)
