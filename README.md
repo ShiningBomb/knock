@@ -1,3 +1,40 @@
+# Your User object have to implement generate_refresh_token and self.from_refresh_token
+Example:
+
+class RefreshToken
+  belongs_to :user
+  attr_accessor :uncrypted_token
+
+  def refresh!
+    generate_token
+    save
+  end
+
+  private
+  def generate_token
+    self.uncrypted_token = SecureRandom.hex(50)
+    self.token = Digest::SHA256.hexdigest self.uncrypted_token #ALWAYS STORE HASHED VERSION!!
+    self.expire_at = 1.years.from_now
+  end
+end
+
+class User
+  has_one :refresh_token
+
+  def generate_refresh_token!
+    refresh = RefreshToken.find_or_create_by(user: self)
+    refresh.refresh!
+    refresh.uncrypted_token
+  end
+
+  def self.from_refresh_token(tkn)
+    hashed_tkn = Digest::SHA256.hexdigest tkn
+    refresh_tkn = RefreshToken.where(token: hashed_tkn).first
+    return nil unless refresh_tkn
+    token.user
+  end
+end
+
 # knock
 
 [![Gem Version](https://badge.fury.io/rb/knock.svg)](http://badge.fury.io/rb/knock)
