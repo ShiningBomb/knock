@@ -1,5 +1,5 @@
 # Finally knock with refresh token!
-Your User object have to implement generate_refresh_token and self.from_refresh_token
+Your User (or any type of user Admin, Customer, etc..) object have to implement generate_refresh_token and self.from_refresh_token
 Example:
 ```ruby
 class RefreshToken
@@ -36,6 +36,28 @@ class User
   end
 end
 ```
+
+Then add route for refresh to your controller which derive from Knock::AuthTokenController
+```ruby
+routes.rb
+
+  post '/user_token' => 'user_token#create'
+  post '/user_token/refresh' => 'user_token#refresh' #This is the controller for refresh token
+
+```
+
+Your create token controller will return jwt together with refresh token instead:
+{
+  "access_token": "eyJ0eXAiOi..",
+  "refresh_token": "JKV1QiLCJh.."
+}
+
+And to get new access token using the refresh token
+post your refresh token to the refresh controller:
+{
+  "refresh_token": "JKV1QiLCJh.."
+}
+
 # knock
 
 [![Gem Version](https://badge.fury.io/rb/knock.svg)](http://badge.fury.io/rb/knock)
