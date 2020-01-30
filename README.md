@@ -1,9 +1,9 @@
-# Finally knock with refresh token!
+# Knock with a secure refresh token!
 Your User (or any type of user Admin, Customer, etc..) object have to implement generate_refresh_token and self.from_refresh_token
 Example:
 ```ruby
 class RefreshToken
-  belongs_to :user
+  belongs_to :user # or you can simply use polymorphic if you have multiple user object: Admin, User, Tenant, Provider, etc..
   attr_accessor :uncrypted_token
 
   def refresh!
